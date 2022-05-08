@@ -16,6 +16,7 @@
 #include "ESPAsyncWebServer.h"
 
 String header;
+String valueString = String(5);
 
 WiFiServer server(80);
 
@@ -78,7 +79,9 @@ void MyServer::run(OnLeftWingMove onLeftWingMove) {
                            int pos1 = header.indexOf('=');
                            int pos2 = header.indexOf('&');
 
-                            onLeftWingMove((header.substring(pos1+1, pos2)).toInt());
+                            valueString = header.substring(pos1+1, pos2);
+
+                            onLeftWingMove(valueString.toInt());
                         }
                         // The HTTP response ends with another blank line
                         client.println();
