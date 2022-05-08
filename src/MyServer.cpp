@@ -62,8 +62,8 @@ public:
 
         request->send(response);
 
-        Serial.println(request->url())
-    }
+        Serial.println(request->url());
+    };
 };
 
 void MyServer::setup() {
@@ -83,5 +83,3 @@ void MyServer::run() {
 void onRequest(AsyncWebServerRequest *request) {
     Serial.println("on test post");
 }
-
-
