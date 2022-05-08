@@ -1,6 +1,6 @@
 
-#ifndef UNTITLED1_MYSERVER_H
-#define UNTITLED1_MYSERVER_H
+#ifndef UNTITLED1_WEBSERVON_H
+#define UNTITLED1_WEBSERVON_H
 
 class Webservo {
 public:
