@@ -22,8 +22,11 @@ WiFiServer server(80);
 
 
 void MyServer::setup() {
-    //your other setup stuff...
+    Serial.begin(115200);
+
     WiFi.softAP("esp-captive");
+
+    server.begin();
 }
 
 void MyServer::run() {
