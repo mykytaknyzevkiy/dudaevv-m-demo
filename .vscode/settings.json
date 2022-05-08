@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "**/.storage/*/**": "json",
+        "*.data": "json",
+        "string": "cpp"
+    }
+}
