@@ -8,6 +8,10 @@ Wings wings = Wings();
 
 MyServer myServer = MyServer();
 
+void onLeftWingMove(int angle) {
+    wings.moveLeft(angle);
+}
+
 void setup() {
     wings.setup();
     motorSpeed.setup();
@@ -15,5 +19,5 @@ void setup() {
 }
 
 void loop() {
-    myServer.run();
+    myServer.run(onLeftWingMove);
 }

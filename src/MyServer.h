@@ -8,8 +8,9 @@
 
 class MyServer {
 public:
+    typedef void (*OnLeftWingMove)(int);
     void setup();
-    void run();
+    void run(OnLeftWingMove onLeftWingMove);
 };
 
 

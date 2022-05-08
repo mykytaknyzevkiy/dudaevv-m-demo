@@ -15,7 +15,6 @@
 #endif
 #include "ESPAsyncWebServer.h"
 
-String valueString = String(5);
 String header;
 
 WiFiServer server(80);
@@ -29,7 +28,7 @@ void MyServer::setup() {
     server.begin();
 }
 
-void MyServer::run() {
+void MyServer::run(OnLeftWingMove onLeftWingMove) {
     WiFiClient client = server.available();   // Listen for incoming clients
 
     if (client) {
@@ -76,13 +75,10 @@ void MyServer::run() {
 
                         //GET /?value=180& HTTP/1.1
                         if(header.indexOf("GET /?value=")>=0) {
-                           // pos1 = header.indexOf('=');
-                           // pos2 = header.indexOf('&');
-                            valueString = "20";
+                           int pos1 = header.indexOf('=');
+                           int pos2 = header.indexOf('&');
 
-                            //Rotate the servo
-                           // myservo.write(valueString.toInt());
-                            Serial.println(valueString);
+                            onLeftWingMove((header.substring(pos1+1, pos2)).toInt());
                         }
                         // The HTTP response ends with another blank line
                         client.println();
@@ -106,6 +102,3 @@ void MyServer::run() {
 }
 
 
-void onRequest(AsyncWebServerRequest *request) {
-    Serial.println("on test post");
-}
