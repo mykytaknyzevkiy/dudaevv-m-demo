@@ -29,7 +29,9 @@ void MyServer::setup() {
     server.begin();
 }
 
-void MyServer::run(OnLeftWingMove onLeftWingMove) {
+void MyServer::run(OnLeftWingMove onLeftWingMove,
+                   OnRightWingMove onRightWingMove,
+                   OnSpeedUp onSpeedUp) {
     WiFiClient client = server.available();   // Listen for incoming clients
 
     if (client) {
@@ -70,12 +72,12 @@ void MyServer::run(OnLeftWingMove onLeftWingMove) {
                         client.println("var servoP = document.getElementById(\"servoPos\"); servoP.innerHTML = slider.value;");
                         client.println("slider.oninput = function() { slider.value = this.value; servoP.innerHTML = this.value; }");
                         client.println("$.ajaxSetup({timeout:1000}); function servo(pos) { ");
-                        client.println("$.get(\"/?value=\" + pos + \"&\"); {Connection: close};}</script>");
+                        client.println("$.get(\"/?moveLeftWing=\" + pos + \"&\"); {Connection: close};}</script>");
 
                         client.println("</body></html>");
 
                         //GET /?value=180& HTTP/1.1
-                        if(header.indexOf("GET /?value=")>=0) {
+                        if(header.indexOf("GET /?moveLeftWing=")>=0) {
                            int pos1 = header.indexOf('=');
                            int pos2 = header.indexOf('&');
 
@@ -83,6 +85,19 @@ void MyServer::run(OnLeftWingMove onLeftWingMove) {
 
                             onLeftWingMove(valueString.toInt());
                         }
+                        else if(header.indexOf("GET /?moveRightWing=")>=0) {
+                            int pos1 = header.indexOf('=');
+                            int pos2 = header.indexOf('&');
+
+                            onLeftWingMove((header.substring(pos1+1, pos2)).toInt());
+                        }
+                        else if(header.indexOf("GET /?speedUp=")>=0) {
+                            int pos1 = header.indexOf('=');
+                            int pos2 = header.indexOf('&');
+
+                            onSpeedUp((header.substring(pos1+1, pos2)).toInt());
+                        }
+
                         // The HTTP response ends with another blank line
                         client.println();
                         // Break out of the while loop
