@@ -12,7 +12,6 @@ void setup() {
     wings.setup();
     motorSpeed.setup();
     myServer.setup();
-
 }
 
 void loop() {

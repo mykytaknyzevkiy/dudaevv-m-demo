@@ -62,7 +62,10 @@ public:
 
         request->send(response);
 
+        Serial.begin(115200);
+        Serial.println("Test");
         Serial.println(request->url());
+
     };
 };
 
