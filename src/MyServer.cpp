@@ -64,7 +64,7 @@ public:
 
         Serial.begin(115200);
         Serial.println("Test");
-        Serial.println(request->getParam("value")->value());
+        Serial.println(request->getParam("value", false, false)->value());
 
     };
 };
