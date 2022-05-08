@@ -9,6 +9,7 @@
 class MyServer {
 public:
     void setup();
+    void run();
 };
 
 

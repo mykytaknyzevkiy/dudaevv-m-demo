@@ -6,12 +6,15 @@
 DriverMotor motorSpeed = DriverMotor();
 Wings wings = Wings();
 
+MyServer myServer = MyServer();
+
 void setup() {
     wings.setup();
     motorSpeed.setup();
-    MyServer().setup();
+    myServer.setup();
 }
 
 void loop() {
+    myServer.run();
 }
 

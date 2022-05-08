@@ -29,6 +29,10 @@ void MyServer::setup() {
     &webServer.on("test", onRequest);
 }
 
+void MyServer::run() {
+    WifiManager.runSoftAP();
+}
+
 
 void onRequest(AsyncWebServerRequest *request) {
     Serial.println("on test post");
