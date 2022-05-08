@@ -9,6 +9,8 @@
 // Create a instance of the WifiManager
 WIFIMANAGER WifiManager;
 
+void onRequest(AsyncWebServerRequest *request);
+
 void MyServer::setup() {
     Serial.begin(9600);
 
@@ -24,5 +26,12 @@ void MyServer::setup() {
 
     WifiManager.runSoftAP();
 
-    &webServer.on("test", {});
+    &webServer.on("test", onRequest);
 }
+
+
+void onRequest(AsyncWebServerRequest *request) {
+    Serial.println("on test post");
+}
+
+
