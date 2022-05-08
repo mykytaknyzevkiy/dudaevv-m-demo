@@ -4,33 +4,51 @@
 
 #include "MyServer.h"
 #include <Arduino.h>
-#include "wifimanager.h"
+#include <DNSServer.h>
+#ifdef ESP32
+#include <WiFi.h>
+#include <AsyncTCP.h>
+#elif defined(ESP8266)
+#include <ESP8266WiFi.h>
+#include <ESPAsyncTCP.h>
+#endif
+#include "ESPAsyncWebServer.h"
 
-// Create a instance of the WifiManager
-WIFIMANAGER WifiManager;
+DNSServer dnsServer;
+AsyncWebServer server(80);
 
-void onRequest(AsyncWebServerRequest *request);
+class CaptiveRequestHandler : public AsyncWebHandler {
+public:
+    CaptiveRequestHandler() {}
+    virtual ~CaptiveRequestHandler() {}
+
+    bool canHandle(AsyncWebServerRequest *request){
+        //request->addInterestingHeader("ANY");
+        return true;
+    }
+
+    void handleRequest(AsyncWebServerRequest *request) {
+        AsyncResponseStream *response = request->beginResponseStream("text/html");
+        response->print("<!DOCTYPE html><html><head><title>Captive Portal</title></head><body>");
+        response->print("<p>This is out captive portal front page.</p>");
+        response->printf("<p>You were trying to reach: http://%s%s</p>", request->host().c_str(), request->url().c_str());
+        response->printf("<p>Try opening <a href='http://%s'>this link</a> instead</p>", WiFi.softAPIP().toString().c_str());
+        response->print("</body></html>");
+        request->send(response);
+    }
+};
 
 void MyServer::setup() {
-    Serial.begin(9600);
-
-    // Load well known Wifi AP credentials from NVS
-    WifiManager.startBackgroundTask();
-
-    // We do need the Webserver to attach our RESTful API
-    AsyncWebServer webServer(80);
-    // Attach our API to the Webserver
-    WifiManager.attachWebServer(&webServer);
-    // Run the Webserver
-    webServer.begin();
-
-    WifiManager.runSoftAP();
-
-    &webServer.on("test", onRequest);
+    //your other setup stuff...
+    WiFi.softAP("esp-captive");
+    dnsServer.start(53, "*", WiFi.softAPIP());
+    server.addHandler(new CaptiveRequestHandler()).setFilter(ON_AP_FILTER);//only when requested from AP
+    //more handlers...
+    server.begin();
 }
 
 void MyServer::run() {
-    WifiManager.runSoftAP();
+    dnsServer.processNextRequest();
 }
 
 
